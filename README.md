@@ -12,6 +12,21 @@ Nothing is downloaded and nothing is pre-trained. The tab you are looking at is 
 
 That is a real screenshot: 2,475 steps, loss 1.88, and the model writing `whith weshould fore wethe o brier year cillest meft pin hider fous thine whoste`. Sort of English. Definitely wrong. Getting better.
 
+## What learning looks like
+
+One run from random weights, recorded by `node examples/trace.mjs` — same seed, same corpus, same settings as the page:
+
+| steps | loss | what it writes |
+| --- | --- | --- |
+| 0 | — | `?och k;zmtia,.t'apbsxyk?lnc'shjp?m?:-i-;c;o,b r !ozw;uxf` |
+| 100 | 3.24 | `s to' thi ns ther,hrlout whsevenutoge menntiwet o e` |
+| 500 | 2.33 | `ut thon tharinch \n bot whproeso w, shereerins muthst \nin ton lfore` |
+| 1,500 | 2.03 | `whand ler's houcp \nwherend wath wheand gonot ome \nthou chye hind wend leeen sust` |
+| 3,000 | 1.80 | `iviing die'st see pong ay to thou the nose weres the coumbly \nwit butered thine` |
+| 6,000 | 1.57 | `if the tas thou spelvids, \no! defecep thinee fire thee world or evintrar evidess` |
+
+At zero steps it produces the alphabet at random, which is what a model that knows nothing produces. By 100 steps it has discovered that letters form clumps. By 500 it has found word boundaries, by 1,500 syllable structure, and by 6,000 the metre, the apostrophes, and a vocabulary of `thou`, `thine`, `thee` and `die`. Nobody told it any of that; it is all in the weights it moved from watching one character predict the next.
+
 ## What is actually running
 
 A character-level transformer — two blocks, four attention heads, a 32-wide embedding, a 16-symbol context — trained by an autograd engine written by hand in the same file. No TensorFlow.js, no ONNX, no WASM blob. Reading the source is the point, so the operators are short:
